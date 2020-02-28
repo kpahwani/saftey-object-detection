@@ -52,8 +52,16 @@ def upload():
                             'Safety Vest': (safety_vest/total_images)*100}
 
     sorted_dict = dict(sorted(predicted_images_dict.items(), key=operator.itemgetter(1), reverse=True))
-    print("Sorted dict", sorted_dict)
-    return render_template("complete.html", parent_dict=sorted_dict)
+    safety_dict={'Safe':0, 'Unsafe':0}
+    safety_dict_hemet = dict()
+
+    for key, value in sorted_dict.items():
+        if sorted_dict[key] > 60:
+            safety_dict['Safe']+=25
+    safety_dict['Unsafe'] = 100- safety_dict['Safe']
+
+
+    return render_template("complete.html", parent_dict=sorted_dict, parent_dict2=safety_dict)
 
 
 @app.route('/upload/<filename>')

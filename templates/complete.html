@@ -16,12 +16,24 @@ th, td {
   text-align: left;
   padding: 8px;
 }
+
+#ac_layer_w{
+    width: 200px;
+    height: 200px;
+}
 tr:nth-child(even) {background-color: #f2f2f2;}
 </style>
+
+
 <head>
     <meta charset="UTF-8">
     <title>Uploaded Image page</title>
+      <script src="https://cdn.anychart.com/js/8.0.1/anychart-core.min.js"></script>
+      <script src="https://cdn.anychart.com/js/8.0.1/anychart-pie.min.js"></script>
+
 </head>
+
+
 <body>
 <h1>Object Detection</h1>
 
@@ -34,5 +46,31 @@ tr:nth-child(even) {background-color: #f2f2f2;}
    </tr>
 {% endfor %}
 </table>
+<div id="container" style="width: 100%; height: 400px;"></div>
+<br/>
+<script>
+
+    var data = JSON.parse('{{parent_dict2 | tojson}}');
+    var chart = anychart.pie();
+    let datanew = [];
+for(let x in data){
+    console.log("X is ", x);
+    var i = {
+        x ,
+        value : data[x]
+    }
+
+   datanew =  datanew.concat([i])
+    console.log("Datanew---->>>", datanew);
+}
+  // set the chart title
+  // add the data
+  chart.data(datanew);
+
+  // display the chart in the container
+  chart.container('container');
+  chart.radius("25%");
+  chart.draw();
+</script>
 </body>
 </html>
