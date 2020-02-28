@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+h1{
+background-color:lightblue;
+text-align:center;
+font-size:50px
+
+}
+h2{
+
+padding-left:100px;
+font-size:30px
+
+}
+#image_preview{
+padding-left:100px;
+float: left;
+padding-left:100px;
+}
+
+input{
+  background-color:lightblue ;
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-decoration: none;
+  margin: 4px 2px;
+  cursor: pointer;
+  font-size:25px
+}
+
+form{
+padding-left:100px;
+}
+
+    </style>
+<title >Upload</title>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+</head>
+<body>
+<h1>Object Detection</h1>
+<h2>Select Files to Upload:</h2>
+<div id="image_preview"></div>
+<form id="upload-form" action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
+    <input id="file-picker" type="file" name="file" accept="image/*" onchange="preview_image();"  multiple>
+    <div id="msg"></div>
+    <input type="submit" value="Upload!" id="upload-button">
+</form>
+
+</body>
+<script>
+
+    $("#file-picker").change(function()
+    {
+
+        var input = document.getElementById('file-picker');
+
+        for (var i=0; i<input.files.length; i++)
+        {
+            var ext= input.files[i].name.substring(input.files[i].name.lastIndexOf('.')+1).toLowerCase()
+
+            if ((ext == 'jpg') || (ext == 'png'))
+            {
+                $("#msg").text("Files are supported")
+            }
+            else
+            {
+                $("#msg").text("Files are NOT supported")
+                document.getElementById("file-picker").value ="";
+            }
+
+        }
+
+    } );
+
+
+$(document).ready(function()
+{
+ $('form').ajaxForm(function()
+ {
+  alert("Uploaded SuccessFully");
+ });
+});
+
+function preview_image()
+{
+$('#image_preview').empty();
+ var total_file=document.getElementById("file-picker").files.length;
+ for(var i=0;i<total_file;i++)
+ {
+  $('#image_preview').append("<img src='"+URL.createObjectURL(event.target.files[i])+"'>");
+ }
+}
+
+
+
+</script>
+</html>
