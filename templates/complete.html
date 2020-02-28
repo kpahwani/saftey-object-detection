@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+    <style>
+h1{
+background-color:lightblue;
+text-align:center;
+font-size:50px
+
+}
+</style>
+<head>
+    <meta charset="UTF-8">
+    <title>Uploaded Image page</title>
+</head>
+<body>
+<h1>Object Detection</h1>
+
+Uploaded
+{% for key1, value1 in parent_dict.items() %}
+    <h3>image_name: {{key1}}</h3>
+   {% for key2, value2 in value1.items() %}
+      <h3>{{key2}}: {{value2}}</h3>
+   {% endfor %}
+{% endfor %}
+</body>
+</html>
