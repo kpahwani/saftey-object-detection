@@ -7,6 +7,16 @@ text-align:center;
 font-size:50px
 
 }
+        table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+tr:nth-child(even) {background-color: #f2f2f2;}
 </style>
 <head>
     <meta charset="UTF-8">
@@ -15,12 +25,14 @@ font-size:50px
 <body>
 <h1>Object Detection</h1>
 
-Uploaded
-{% for key1, value1 in parent_dict.items() %}
-    <h3>image_name: {{key1}}</h3>
-   {% for key2, value2 in value1.items() %}
-      <h3>{{key2}}: {{value2}}</h3>
-   {% endfor %}
+<h2> Safety Analysis </h2>
+<table>
+{% for key, value in parent_dict.items() %}
+   <tr>
+        <th> {{ key }} </th>
+        <td> {{ value }} </td>
+   </tr>
 {% endfor %}
+</table>
 </body>
 </html>
