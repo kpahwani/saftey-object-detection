@@ -23,7 +23,7 @@ def upload():
     safety_gloves_score= 0
     safety_goggles=0
     safety_vest =0
-    target = os.path.join(APP_ROOT, 'files')
+    target = os.path.join(APP_ROOT, 'files/images')
     total_images = len(request.files.getlist("file"))
     if not os.path.isdir(target):
         os.mkdir(target)
