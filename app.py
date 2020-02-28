@@ -1,4 +1,4 @@
-
+import operator
 import os
 
 from PIL import Image
@@ -20,8 +20,12 @@ def index():
 
 @app.route("/upload", methods=["POST"])
 def upload():
-    predicted_images_dict={}
-    target = os.path.join(APP_ROOT, 'files')
+    helmet_score= 0
+    safety_gloves_score= 0
+    safety_goggles=0
+    safety_vest =0
+    target = os.path.join(APP_ROOT, 'files/images')
+    total_images = len(request.files.getlist("file"))
     if not os.path.isdir(target):
         os.mkdir(target)
 
@@ -37,12 +41,29 @@ def upload():
         upload.save(destination)
         image = Image.open(destination)
         image = image.resize(size=(299, 299))
-        model = load_model('models/object_detection_1.model', compile=False)
+        model = load_model('models/object_detection2.model', compile=False)
         predicted_img = predict(model=model, img=image)
-        predicted_images_dict[filename] = {'helmet': predicted_img[0], 'gloves': predicted_img[1]}
+        
+        helmet_score += predicted_img[0]
+        safety_gloves_score += predicted_img[1]
+        safety_goggles += predicted_img[2]
+        safety_vest += predicted_img[3]
 
-    # return send_from_directory("images", filename, as_attachment=True)
-    return render_template("complete.html", parent_dict=predicted_images_dict)
+    predicted_images_dict = {'Helmet': (helmet_score/total_images)*100,
+                            'Safety Gloves': (safety_gloves_score/total_images)*100,
+                            'Safety Goggles': (safety_goggles/total_images)*100,
+                            'Safety Vest': (safety_vest/total_images)*100}
+
+    sorted_dict = dict(sorted(predicted_images_dict.items(), key=operator.itemgetter(1), reverse=True))
+    safety_dict={'Safe':0, 'Unsafe':0}
+    safety_dict_hemet = dict()
+
+    for key, value in sorted_dict.items():
+        if sorted_dict[key] > 60:
+            safety_dict['Safe']+=25
+    safety_dict['Unsafe'] = 100- safety_dict['Safe']
+
+    return render_template("complete.html", parent_dict=sorted_dict, parent_dict2=safety_dict)
 
 
 @app.route('/upload/<filename>')
