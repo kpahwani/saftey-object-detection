@@ -1,10 +1,11 @@
 
 import os
-from predict_function import predict
-from flask import Flask, request, render_template,send_from_directory
+
 from PIL import Image
+from flask import Flask, request, render_template, send_from_directory, redirect
 from keras.models import load_model
 
+from predict_function import predict
 
 app = Flask(__name__)
 
@@ -23,7 +24,8 @@ def upload():
     target = os.path.join(APP_ROOT, 'files')
     if not os.path.isdir(target):
         os.mkdir(target)
-    for upload in request.files.getlist("file"):
+
+    for key, upload in request.files.to_dict().items():
         filename = upload.filename
         # This is to verify files are supported
         ext = os.path.splitext(filename)[1]
@@ -37,9 +39,7 @@ def upload():
         image = image.resize(size=(299, 299))
         model = load_model('models/object_detection_1.model', compile=False)
         predicted_img = predict(model=model, img=image)
-        predicted_images_dict[filename]={'helmet': predicted_img[0], 'gloves': predicted_img[1]}
-
-
+        predicted_images_dict[filename] = {'helmet': predicted_img[0], 'gloves': predicted_img[1]}
 
     # return send_from_directory("images", filename, as_attachment=True)
     return render_template("complete.html", parent_dict=predicted_images_dict)
@@ -53,7 +53,6 @@ def send_image(filename):
 @app.route('/gallery')
 def get_gallery():
     image_names = os.listdir('./images')
-    print(image_names)
     return render_template("gallery.html", image_names=image_names)
 
 
